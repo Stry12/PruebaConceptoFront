@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registrar Nuevo Paciente - HospitalMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@300,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { DEFAULT: "#0F766E", hover: "#0D6B63", light: "#CCFBF1", lighter: "#F0FDFA" },
+                        secondary: { DEFAULT: "#2563EB", hover: "#1D4ED8", light: "#DBEAFE" },
+                        accent: { DEFAULT: "#D97706", hover: "#B45309", light: "#FEF3C7" },
+                        neutral: { 50: "#F8FAFC", 100: "#F1F5F9", 200: "#E2E8F0", 300: "#CBD5E1", 400: "#94A3B8", 500: "#64748B", 600: "#475569", 700: "#334155", 800: "#1E293B", 900: "#0F172A" }
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "sm": "4px", "md": "6px", "lg": "8px", "full": "9999px" },
+                    fontFamily: { headline: ["Inter", "sans-serif"], body: ["Inter", "sans-serif"] }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        body { background-color: #F8FAFC; font-family: 'Inter', sans-serif; }
+        .form-input-height { height: 40px; }
+    </style>
+</head>
+<body class="antialiased text-neutral-900">
+<aside class="w-60 h-screen fixed left-0 top-0 bg-white border-r border-neutral-200 flex flex-col py-6 px-4 z-50">
+<div class="mb-10 px-2"><h1 class="text-2xl font-bold text-primary tracking-tight">HospitalMS</h1><p class="text-[10px] uppercase tracking-widest text-neutral-400 font-medium mt-1">Management System</p></div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-neutral-600 hover:bg-neutral-50 transition-colors" href="#"><span class="material-symbols-outlined text-neutral-400">queue</span><span class="text-sm font-medium">Cola OPD</span></a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-neutral-600 hover:bg-neutral-50 transition-colors" href="#"><span class="material-symbols-outlined text-neutral-400">person_search</span><span class="text-sm font-medium">Buscar Paciente</span></a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-primary bg-primary-lighter font-medium transition-colors" href="#"><span class="material-symbols-outlined">person_add</span><span class="text-sm">Registrar Paciente</span></a>
+</nav>
+</aside>
+<header class="h-16 fixed top-0 right-0 left-60 bg-white border-b border-neutral-200 flex justify-between items-center px-8 z-40">
+<div></div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="text-right"><p class="text-sm font-semibold text-neutral-900 leading-none">María López</p><p class="text-[11px] text-neutral-500 mt-1">Recepcionista</p></div>
+<div class="w-9 h-9 rounded-md bg-neutral-100 flex items-center justify-center text-neutral-600 font-semibold text-xs ring-1 ring-neutral-200">ML</div>
+</div>
+</div>
+</header>
+<main class="ml-60 pt-16 min-h-screen">
+<div class="p-8 max-w-5xl mx-auto">
+<div class="mb-8"><h1 class="text-[28px] font-semibold text-neutral-900">Registrar Nuevo Paciente</h1><p class="text-neutral-500 text-sm mt-1">Complete todos los campos requeridos para dar de alta un nuevo perfil médico.</p></div>
+<div class="bg-white border border-neutral-200 rounded-md p-8 shadow-sm">
+<form class="space-y-8">
+<div>
+<div class="flex items-center gap-2 mb-6"><div class="h-1 w-8 bg-primary rounded-full"></div><h2 class="text-sm font-bold text-neutral-700 uppercase tracking-wider">Información Personal</h2></div>
+<div class="grid grid-cols-2 gap-x-8 gap-y-6">
+<div class="flex flex-col gap-2"><label class="text-sm font-medium text-neutral-600" for="nombre">Nombre</label><input class="form-input-height border border-neutral-200 rounded-sm px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary/10 transition-all outline-none" id="nombre" type="text"/></div>
+<div class="flex flex-col gap-2"><label class="text-sm font-medium text-neutral-600" for="apellido">Apellido</label><input class="form-input-height border border-neutral-200 rounded-sm px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary/10 transition-all outline-none" id="apellido" type="text"/></div>
+<div class="flex flex-col gap-2"><label class="text-sm font-medium text-neutral-600" for="genero">Género</label><select class="form-input-height border border-neutral-200 rounded-sm px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary/10 transition-all outline-none appearance-none bg-white" id="genero"><option disabled selected value="">Seleccione</option><option>Masculino</option><option>Femenino</option><option>Otro</option></select></div>
+<div class="flex flex-col gap-2"><label class="text-sm font-medium text-neutral-600" for="fecha">Fecha de nacimiento</label><input class="form-input-height border border-neutral-200 rounded-sm px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary/10 transition-all outline-none" id="fecha" type="date"/></div>
+</div></div>
+<div>
+<div class="flex items-center gap-2 mb-6"><div class="h-1 w-8 bg-neutral-300 rounded-full"></div><h2 class="text-sm font-bold text-neutral-700 uppercase tracking-wider">Contacto</h2></div>
+<div class="grid grid-cols-2 gap-x-8 gap-y-6">
+<div class="flex flex-col gap-2"><label class="text-sm font-medium text-neutral-600" for="telefono">Teléfono</label><input class="form-input-height border border-neutral-200 rounded-sm px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary/10 transition-all outline-none" id="telefono" type="tel"/></div>
+<div class="flex flex-col gap-2"><label class="text-sm font-medium text-neutral-600" for="email">Email</label><input class="form-input-height border border-neutral-200 rounded-sm px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary/10 transition-all outline-none" id="email" type="email"/></div>
+<div class="flex flex-col gap-2 col-span-2"><label class="text-sm font-medium text-neutral-600" for="direccion">Dirección</label><input class="form-input-height border border-neutral-200 rounded-sm px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary/10 transition-all outline-none" id="direccion" type="text"/></div>
+</div></div>
+<div class="pt-8 border-t border-neutral-100 flex justify-end items-center gap-4">
+<button class="px-6 py-2 border border-neutral-200 text-neutral-600 rounded-md text-sm font-medium hover:bg-neutral-50 transition-all" type="button">Cancelar</button>
+<button class="px-8 py-2 bg-primary text-white rounded-md text-sm font-medium hover:bg-primary-hover shadow-sm transition-all" type="submit">Registrar Paciente</button>
+</div>
+</form>
+</div>
+</div>
+</main>
+</body></html>

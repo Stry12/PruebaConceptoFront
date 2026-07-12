@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HospitalMS - Iniciar Sesión</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Public+Sans:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@300,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: "#0F766E",
+                            hover: "#0D6B63",
+                            light: "#CCFBF1",
+                            lighter: "#F0FDFA"
+                        },
+                        secondary: {
+                            DEFAULT: "#2563EB",
+                            hover: "#1D4ED8",
+                            light: "#DBEAFE"
+                        },
+                        accent: {
+                            DEFAULT: "#D97706",
+                            hover: "#B45309",
+                            light: "#FEF3C7"
+                        },
+                        neutral: {
+                            50: "#F8FAFC",
+                            100: "#F1F5F9",
+                            200: "#E2E8F0",
+                            300: "#CBD5E1",
+                            400: "#94A3B8",
+                            500: "#64748B",
+                            600: "#475569",
+                            700: "#334155",
+                            800: "#1E293B",
+                            900: "#0F172A"
+                        },
+                        success: "#16A34A",
+                        error: "#DC2626"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "sm": "4px",
+                        "md": "6px",
+                        "lg": "8px",
+                        "xl": "12px",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        headline: ["Inter", "sans-serif"],
+                        display: ["Inter", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                        label: ["Public Sans", "sans-serif"]
+                    },
+                    boxShadow: {
+                        'subtle': '0 1px 2px rgba(15, 23, 42, 0.04)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+        }
+        .login-input:focus {
+            outline: none;
+            border-color: #0F766E;
+            box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased text-neutral-900">
+<main class="min-h-screen flex flex-col md:flex-row">
+<!-- Left Half: Branding & Visuals -->
+<section class="w-full md:w-1/2 bg-primary flex flex-col justify-center items-center p-8 lg:p-16 relative overflow-hidden">
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<div class="absolute top-[-10%] right-[-10%] w-64 h-64 border border-white rounded-full"></div>
+<div class="absolute bottom-[-5%] left-[-5%] w-96 h-96 border border-white rounded-full"></div>
+</div>
+<div class="z-10 text-center">
+<h1 class="text-white text-5xl md:text-6xl font-bold tracking-tight mb-6">HospitalMS</h1>
+<div class="flex flex-col items-center space-y-4">
+<span class="material-symbols-outlined text-white text-6xl" data-icon="medical_services">medical_services</span>
+<p class="text-white/90 text-xl font-light tracking-wide">Sistema de Gestión Hospitalaria</p>
+</div>
+</div>
+</section>
+<!-- Right Half: Login Form -->
+<section class="w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-8 lg:p-24">
+<div class="w-full max-w-[400px]">
+<header class="mb-8">
+<h2 class="text-[22px] font-semibold text-neutral-900 mb-2">Iniciar Sesión</h2>
+<p class="text-sm text-neutral-600">Bienvenido de nuevo. Por favor, ingrese sus credenciales.</p>
+</header>
+<!-- Login Form -->
+<form class="space-y-5" id="login-form">
+<!-- Email Field -->
+<div class="space-y-1.5">
+<label class="block text-sm font-medium text-neutral-600" for="email">Correo electrónico</label>
+<div class="relative">
+<input class="login-input w-full h-[40px] px-3 border border-neutral-200 rounded-sm text-sm placeholder:text-neutral-400 transition-all duration-200" id="email" placeholder="usuario@hospital.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-center">
+<label class="block text-sm font-medium text-neutral-600" for="password">Contraseña</label>
+<a class="text-xs text-secondary hover:underline" href="#">¿Olvidó su contraseña?</a>
+</div>
+<div class="relative">
+<input class="login-input w-full h-[40px] px-3 pr-10 border border-neutral-200 rounded-sm text-sm placeholder:text-neutral-400 transition-all duration-200" id="password" placeholder="••••••••" required="" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 flex items-center" id="toggle-password" type="button">
+<span class="material-symbols-outlined text-xl" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<!-- Inline Error Reference -->
+<div class="hidden flex items-center gap-2 text-error text-[12px]" id="error-container">
+<span class="material-symbols-outlined text-sm" data-icon="error">error</span>
+<span>Correo o contraseña incorrectos</span>
+</div>
+<!-- Submit Button -->
+<button class="w-full h-[44px] bg-primary hover:bg-primary-hover text-white text-sm font-semibold rounded-md shadow-subtle active:scale-[0.98] transition-all duration-200 mt-2" type="submit">
+                        Iniciar Sesión
+                    </button>
+</form>
+<footer class="mt-8 pt-6 border-t border-neutral-100">
+<p class="text-center text-xs text-neutral-500">
+                        © 2024 HospitalMS. Todos los derechos reservados.<br/>
+                        Acceso restringido solo para personal autorizado.
+                    </p>
+</footer>
+</div>
+</section>
+</main>
+</body></html>

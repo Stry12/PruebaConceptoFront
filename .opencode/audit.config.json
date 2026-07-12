@@ -1,0 +1,7 @@
+{
+  "srcDir": "hospital-frontend/src",
+  "pagesDir": "hospital-frontend/src/pages",
+  "componentsDir": "hospital-frontend/src/shared/components",
+  "tokensFile": "hospital-frontend/src/styles/theme.css",
+  "publicRoutes": ["/login"]
+}
