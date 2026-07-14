@@ -78,6 +78,33 @@ La estructura firma de la Fase 3 NO es un ejercicio creativo abierto: se **deriv
 - **Referentes**: Uber (ops), Flightradar24, Samsara.
 - **Prohibido**: enterrar el mapa detrás de una tabla.
 
+### 12. Landing / campaña (registro marketing siempre)
+- **Objeto central**: la promesa (mensaje + prueba).
+- **Esqueleto**: stack narrativo en jerarquía Z: hero (mensaje + un CTA primario) → prueba social → beneficios → objeciones → CTA final. Sin chrome de aplicación.
+- **Referentes**: Linear (landing), Stripe, Vercel.
+- **Prohibido**: sidebar o densidad de dashboard; más de un CTA primario por viewport; hero que describe features en vez de la promesa.
+
+### 13. Pricing / planes (registro marketing siempre)
+- **Objeto central**: la comparación de planes.
+- **Esqueleto**: 2-4 columnas de plan con el recomendado visualmente destacado, tabla comparativa debajo, FAQ al cierre.
+- **Referentes**: Stripe, Notion, Figma (pricing).
+- **Prohibido**: planes visualmente idénticos (sin recomendado); esconder el precio o la letra pequeña detrás de interacciones.
+
+### 14. Onboarding / activación / paywall (registro marketing siempre)
+- **Objeto central**: el siguiente paso único.
+- **Esqueleto**: pariente del arquetipo 9 (wizard de foco único) pero con narrativa de valor: cada paso muestra el beneficio antes de pedir el dato; progreso visible; salidas discretas pero presentes.
+- **Referentes**: Duolingo, Superhuman, Headspace.
+- **Prohibido**: pedir datos antes de mostrar valor; formulario-sábana; ocultar el "saltar" cuando existe.
+
+## Registro de pantalla (`producto` | `marketing`)
+
+Además del arquetipo, cada pantalla del inventario de Fase 3 lleva un **registro**, que resuelve por pantalla la tensión "que venda ↔ que se use bien" (no se resuelve en abstracto a nivel de producto):
+
+- **`producto`**: el diseño sirve a la tarea; el usuario ya está dentro y la retención viene de la usabilidad. Éxito = eficiencia, claridad, cero fricción. **Audacia 1-3.** Lente de auditoría: `impeccable reference/product.md`.
+- **`marketing`**: el diseño persuade; el usuario está decidiendo si entra, paga o activa. Éxito = jerarquía persuasiva (promesa → prueba → CTA). **Audacia 3-5.** Lente de auditoría: `impeccable reference/brand.md`.
+
+Los arquetipos 12-14 son siempre `marketing`. Cualquier otro arquetipo puede contener pantallas `marketing` puntuales — un empty state que invita a activar una función, una pantalla de upgrade dentro de una app `producto`. El registro viaja en el ScreenBrief y fija el rango del dial de audacia.
+
 ## Regla de cierre
 
 Si tras clasificar una pantalla el esqueleto resultante coincide con el default `sidebar + stat-cards + grid/tabla`, tiene que ser porque su rol es `registros` (tabla, sin stat-cards) o `analítica` (stat-cards, porque son el contenido). Cualquier otra llegada a ese esqueleto es el prior de Stitch hablando — reclasifica. Y a la inversa: no fuerces originalidad donde el arquetipo pide convención (un calendario debe parecer un calendario); la diferenciación vive en la decisión memorable y en la estética de Fase 2, no en romper el patrón que el usuario ya sabe usar.

@@ -38,6 +38,8 @@ screen:
   slug: <slug>
   nombre: <nombre>
   tipo_nodo: raiz | overlay | pantalla
+  registro: producto | marketing   # de ux-flow.md — fija el rango de audacia y la lente de auditoría
+  arquetipo: <arquetipo asignado en ux-flow.md, ver reference/archetypes.md>
   prompt_padre: null | .opencode/artifacts/design/prompts/<slug-padre>.md
 fuentes:
   theme_css: .opencode/artifacts/design/theme.css
@@ -61,7 +63,7 @@ correcciones_vigentes: []  # desviaciones aprobadas en conversación aún no vol
 ## Dials (declara los tres en cada prompt, derivados de design-tokens.md y discovery.md)
 
 - **Densidad 1-5**: 1 = aireado editorial (mucho blanco, pocas piezas por viewport) · 5 = denso tipo terminal de datos (tablas compactas, filas de 40-44px).
-- **Audacia 1-5**: 1 = neutro utilitario (marca casi invisible) · 5 = la marca domina la superficie (color drenched, tipografía display).
+- **Audacia 1-5**: 1 = neutro utilitario (marca casi invisible) · 5 = la marca domina la superficie (color drenched, tipografía display). El rango lo fija el **registro** de la pantalla: `producto` → 1-3, `marketing` → 3-5 (ver `reference/archetypes.md`). Si la Fase 2 eligió una dirección creativa, la audacia y la Capa 3 salen de ella.
 - **Movimiento 1-3**: qué microinteracciones se INSINÚAN visualmente. Stitch genera HTML/CSS estático: describe el estado visible (hover, focus, selected), no la transición. Detalle en `reference/states.md`.
 
 Los dials no son decorativos: fijan decisiones que de otro modo Stitch resuelve con su default genérico, y mantienen coherencia entre pantallas del mismo lote (mismo dial → misma densidad percibida). Se definen una vez por lote y solo cambian con justificación anotada en el ScreenBrief.

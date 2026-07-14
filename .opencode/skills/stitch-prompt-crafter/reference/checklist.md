@@ -17,7 +17,7 @@ Estos 18 puntos se repasan TODOS contra `design/prompts/<slug>.md` antes de gast
 
 ## Calidad de diseño (11-18)
 
-11. [ ] ¿Los tres dials (densidad/audacia/movimiento) están declarados en el ScreenBrief, son coherentes con `design-tokens.md`/`discovery.md`, y son LOS MISMOS que el resto del lote (o el cambio está justificado por escrito)?
+11. [ ] ¿Los tres dials (densidad/audacia/movimiento) están declarados en el ScreenBrief, son coherentes con `design-tokens.md`/`discovery.md`, y son LOS MISMOS que el resto del lote (o el cambio está justificado por escrito)? ¿La audacia cae dentro del rango del registro de la pantalla (`producto` 1-3 / `marketing` 3-5), y si hay dirección creativa elegida en Fase 2, la Capa 3 la respeta?
 12. [ ] ¿Cero adjetivos vagos sin cualificar ("moderno", "limpio", "profesional", "minimalista", "bonito", "cool")? Ver sustituciones en `vocabulary.md`.
 13. [ ] ¿Cada componente interactivo visible tiene descrito su estado en reposo Y al menos un estado alternativo insinuable estáticamente (hover/selected/disabled/error), según `states.md`?
 14. [ ] ¿El primer viewport está especificado: qué se ve sin hacer scroll y qué elemento domina?

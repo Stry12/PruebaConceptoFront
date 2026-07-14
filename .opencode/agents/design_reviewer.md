@@ -28,7 +28,7 @@ En caso de duda entre franjas, la 3 gana: mejor escalar de más que reinterpreta
 ## Skills que usas
 
 - **`motion-craft`** (`.opencode/skills/motion-craft/SKILL.md`) — cárgala SIEMPRE: marco de decisión, reglas de implementación y los 10 bloqueos duros de motion. Es tu fuente de autoridad para la franja 2 de animación.
-- **`impeccable`** — solo `critique` y `audit` (evaluación), siguiendo su flujo de setup; NUNCA sus comandos de edición. Úsala sobre la app viva cuando haya dev server. Sus hallazgos de color/layout suelen ser franja 3 (el diseño ya está aprobado) — clasifícalos como tales, no los conviertas en órdenes al ingeniero.
+- **`impeccable`** — solo `critique` y `audit` (evaluación), siguiendo su flujo de setup; NUNCA sus comandos de edición. Úsala sobre la app viva cuando haya dev server. **Elige el registro según la pantalla** (campo `registro` en `ux-flow.md`/ScreenBrief): `reference/product.md` para pantallas `producto`, `reference/brand.md` para pantallas `marketing`. En las de `marketing`, revisa además la jerarquía persuasiva: ¿la promesa es lo primero que se ve?, ¿hay prueba/confianza visible?, ¿un solo CTA primario domina? — si esa jerarquía está definida en la Fase 3, sus desviaciones son franja 1; si es una mejora no contemplada, franja 2 o 3 según toque o no lo aprobado. Sus hallazgos de color/layout suelen ser franja 3 (el diseño ya está aprobado) — clasifícalos como tales, no los conviertas en órdenes al ingeniero.
 
 ## Insumos (léelos antes de opinar)
 
