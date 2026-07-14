@@ -1,0 +1,12 @@
+*
+!/.gitignore
+!/.opencode/
+!/.opencode/**
+!/hospital-frontend/
+!/hospital-frontend/**
+
+.opencode/node_modules/
+.opencode/dist/
+hospital-frontend/node_modules/
+hospital-frontend/dist/
+*.tsbuildinfo

@@ -5,22 +5,23 @@ description: Use when the user gives a high-level functional description (client
 
 # Flujo de orquestación: descripción funcional → frontend
 
-Este proyecto usa tres agentes de OpenCode que se coordinan para llevar una descripción funcional de alto nivel hasta un frontend funcionando con datos dummy:
+Este proyecto usa cinco agentes de OpenCode que se coordinan para llevar una descripción funcional de alto nivel hasta un frontend funcionando con datos dummy:
 
 ```
-orchestrator  →  ui_designer  →  frontend_engineer  →  qa_verifier
-(coordina)       (Fases 1-4,      (convierte HTML        (verifica con
-                  Stitch)          descargado en código)   auditorías; no corrige)
+orchestrator  →  ui_designer  →  frontend_engineer  →  qa_verifier ∥ design_reviewer
+(coordina)       (Fases 1-4,      (convierte HTML        (verificación mecánica ∥ review de
+                  Stitch)          descargado en código)   craft; ninguno corrige código)
 ```
 
 ## Quién hace qué
 
-- **`orchestrator`** (`.opencode/agents/orchestrator.md`, mode `primary`): punto de entrada. Recibe la descripción funcional, extrae o respeta el dominio dado (nunca lo rediseña), resuelve ambigüedades menores de tipos/atributos por su cuenta, y delega vía Task tool — con permisos restringidos exclusivamente a `ui_designer` y `frontend_engineer` — el resto del trabajo. No diseña ni programa nada él mismo.
+- **`orchestrator`** (`.opencode/agents/orchestrator.md`, mode `primary`): punto de entrada. Recibe la descripción funcional, extrae o respeta el dominio dado (nunca lo rediseña), resuelve ambigüedades menores de tipos/atributos por su cuenta, y delega vía Task tool — con permisos restringidos exclusivamente a `ui_designer`, `frontend_engineer`, `qa_verifier` y `design_reviewer` — el resto del trabajo. No diseña ni programa nada él mismo.
 - **`ui_designer`** (`.opencode/agents/ui_designer.md`, mode `all`): lleva 4 fases con aprobación humana obligatoria en cada una (Descubrimiento → Estrategia visual → UX → Ejecución en Stitch), y descarga el código de cada pantalla aprobada a disco. Es el único agente con acceso a las herramientas del MCP `stitch`.
 - **`frontend_engineer`** (`.opencode/agents/frontend_engineer.md`, mode `all`): convierte el HTML descargado en componentes reales, arquitecturados (separación UI/dominio/backend), con librería de componentes, theming, y datos dummy funcionales (incluyendo mutaciones como login o mover ítems entre colas). No tiene acceso a las herramientas de Stitch.
 - **`qa_verifier`** (`.opencode/agents/qa_verifier.md`, mode `all`): verificador independiente. Ejecuta las auditorías mecánicas (tool `frontend_audit` / `node .opencode/scripts/audit/run-all.mjs`), muestrea fidelidad de extracción y verifica funcionalidad en runtime; reporta en `qa/verification-report.md` y marca "verificada" en `TODO.md`. **No corrige código** — los hallazgos vuelven a `frontend_engineer`. Ver la skill `verification-tools` para el detalle del toolbox.
+- **`design_reviewer`** (`.opencode/agents/design_reviewer.md`, mode `all`): consultor senior de diseño, contraparte de criterio de `qa_verifier` (pueden correr en paralelo). Revisa la app viva: fidelidad al diseño aprobado y craft que los mockups estáticos no expresan (motion vía skill `motion-craft`, estados interactivos, foco, responsive). Reporta en `design-review/design-review.md` con hallazgos en 3 franjas de autoridad: fidelidad (bloqueante → `frontend_engineer`), craft no expresado en mockups (propuesta directa → `frontend_engineer`), y cambios al diseño aprobado (solo sugerencia → usuario, y si se acepta vuelve por `ui_designer`). **No edita código ni artefactos de diseño.**
 
-Cualquiera de los tres puede invocarse directo (`mode: all`/`primary`) si no hace falta el pipeline completo — por ejemplo, seguir iterando una pantalla puntual con `ui_designer`, o pedirle a `frontend_engineer` que implemente una pantalla cuyo `.html` ya está descargado.
+Cualquiera de ellos puede invocarse directo (`mode: all`/`primary`) si no hace falta el pipeline completo — por ejemplo, seguir iterando una pantalla puntual con `ui_designer`, o pedirle a `frontend_engineer` que implemente una pantalla cuyo `.html` ya está descargado.
 
 ## Mapa de artefactos (`.opencode/artifacts/`)
 
@@ -42,14 +43,15 @@ La carpeta se organiza por dueño: lo compartido vive en la raíz, lo que le per
 | `frontend/frontend-architecture.md` | `frontend_engineer` | Stack elegido, mapeo de carpetas, registro de componentes construidos (props/variantes/pantallas), qué pantallas/entidades ya están implementadas |
 | `ENGANCHE_BACKEND.md` (en la raíz del proyecto, no en `.opencode/`) | `frontend_engineer` | Qué falta para conectar el backend real — no se implementa hasta que se pida aparte |
 | `qa/verification-report.md` | `qa_verifier` | Veredicto de verificación (auditorías, fidelidad, runtime) con acciones requeridas — carpeta exclusiva de `qa_verifier` |
+| `design-review/design-review.md` (+`shots/`) | `design_reviewer` | Review de craft y fidelidad en 3 franjas de autoridad, con capturas como evidencia — carpeta exclusiva de `design_reviewer` |
 
 ## Dónde está el estado del pipeline
 
-`.opencode/artifacts/TODO.md` es la fuente única de verdad de en qué punto quedó todo. Antes de continuar cualquier trabajo en este proyecto (o de decidir qué agente invocar), léelo primero — evita repetir fases ya aprobadas o perder de vista qué pantallas faltan. Los tres agentes lo actualizan a medida que avanzan, no solo al final.
+`.opencode/artifacts/TODO.md` es la fuente única de verdad de en qué punto quedó todo. Antes de continuar cualquier trabajo en este proyecto (o de decidir qué agente invocar), léelo primero — evita repetir fases ya aprobadas o perder de vista qué pantallas faltan. Todos los agentes lo actualizan a medida que avanzan, no solo al final.
 
 ## Guardrails importantes
 
-- El dominio (`domain.md`) es dado — ninguno de los tres agentes lo rediseña una vez aprobado.
+- El dominio (`domain.md`) es dado — ningún agente lo rediseña una vez aprobado.
 - `orchestrator` nunca escribe contenido de diseño (paletas, user flows, prompts de Stitch) ni código — si lo hace, es un error, no una optimización.
 - `frontend_engineer` nunca inventa el markup de una pantalla cuyo `.html` no esté descargado, ni cambia el diseño visual aprobado al reorganizar en componentes — solo puede reestructurar código, no reinterpretar el diseño.
 - Los datos dummy deben ser funcionales (login, mutaciones de estado como mover entre colas), no solo de lectura estática.
