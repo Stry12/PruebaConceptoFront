@@ -10,6 +10,7 @@ const AUDITS = [
   'route-reachability.mjs',
   'handler-wiring.mjs',
   'implied-screens.mjs',
+  'skeleton-check.mjs',
   'token-fidelity.mjs',
   'registry-sync.mjs',
   'unlayered-css.mjs',

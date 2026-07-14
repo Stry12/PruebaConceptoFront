@@ -1,330 +1,276 @@
-# UX Flow — Hospital Management System
+# Fase 3 — Estructura y UX
 
-## Arquitectura de información
+## Estructura firma (derivada de arquetipos)
 
-### Layout global (todas las pantallas autenticadas)
-```
-┌──────────────────────────────────────────────────┐
-│  Header (64px) — Logo + nombre usuario + rol    │
-├──────────┬───────────────────────────────────────┤
-│ Sidebar  │  Contenido principal                  │
-│ (240px)  │  (fluido, restante)                   │
-│          │                                       │
-│          │                                       │
-│          │                                       │
-└──────────┴───────────────────────────────────────┘
-```
+### Objeto central
 
-- **Sidebar fija** con navegación de alto nivel. Itens varían según el rol del usuario.
-- **Header** con logo del sistema (izquierda), nombre y rol del usuario autenticado (derecha), e ícono de cerrar sesión.
-- **Contenido principal** con fondo `--color-bg` (#F8FAFC), padding de 32px.
+El **MediaItem** — específicamente su **portada/título**. Es lo que el usuario mira, busca, filtra y manipula el 80% del tiempo. La interfaz debe poner el contenido al frente, no la navegación.
 
-### Navegación por rol
+### Clasificación por arquetipo
 
-| Rol | Sidebar items |
-|---|---|
-| **Recepcionista** | Cola OPD · Buscar Paciente · Registrar Paciente |
-| **Doctor** | Cola OPD · Buscar Paciente |
-| **Administrador** | Empleados · Registrar Empleado |
+| Pantalla | Arquetipo | Esqueleto heredado |
+|---|---|---|
+| Library (Home) | **Biblioteca de contenido / medios** (#3) | Grid de portadas grandes, browsing visual, scroll horizontal por colección/status. Navegación mínima (topbar + bottom tabs). |
+| Search & Browse | **Biblioteca de contenido / medios** (#3) | Grid de portadas con panel de filtros. Filtros combinables en topbar o slide-in. |
+| Media Detail | **Biblioteca de contenido / medios** (#3) | Ficha de contenido con portada dominante + metadatos. |
+| Add/Edit Media | **Formularios / trámite** (#9) | Slide-over panel de una columna, campos agrupados, progreso visual. |
+| Collections List | **Biblioteca de contenido / medios** (#3) | Grid de colecciones como "estanterías". |
+| Collections Detail | **Biblioteca de contenido / medios** (#3) | Scroll horizontal de portadas dentro de la colección. |
+| Playlists | **Biblioteca de contenido / medios** (#3) | Lista ordenada de items con portadas. |
+| Bulk Upload | **Formularios / trámite** (#9) | Wizard de pasos: subir → previsualizar → confirmar. |
+| Admin Content Mgmt | **Registros / CRUD** (#1) | Tabla densa de items con acciones inline. Solo visible en rol admin. |
 
-- Los items de sidebar se filtran por rol — cada usuario solo ve lo que le corresponde.
-- "Buscar Paciente" es compartido entre Recepcionista y Doctor pero se muestra en la misma posición del sidebar.
+### Referentes del dominio
+
+- **Letterboxd**: browsing visual de películas con portadas protagonistas, filtros elegantes.
+- **Plex**: biblioteca personal con estanterías horizontales por categoría.
+- **Spotify**: navegación por colecciones/playlists con scroll horizontal.
+- **Notion**: formularios limpios y slide-overs para creación/edición.
+
+### Decisión de layout memorable
+
+> **"La portada manda: browsing por estanterías horizontales de portadas grandes, con filtros flotantes que no compiten con el contenido. La navegación se reduce a bottom tabs (mobile) o topbar horizontal (desktop) — nunca sidebar. Las acciones de creación/edición se abren como slide-over panels que no dejan la pantalla actual."**
+
+**Prohibiciones de estructura**:
+- ❌ Sidebar de navegación fija
+- ❌ Stat-cards como bloque principal de CUALQUIER pantalla
+- ❌ Tabla como vista principal de la biblioteca (solo para admin CRUD)
+- ❌ Grid uniforme de cards pequeñas — las portadas deben ser grandes y protagonistas
+- ❌ Navegación por árboles de menú anidados
 
 ---
 
-## User flows
+## User flow principal (Usuario regular)
 
-### Flow 1 — Login
+### Flujo 1: Explorar mi biblioteca
 ```
-[Login screen] → (credenciales correctas) → [Dashboard según rol]
-                 → (credenciales incorrectas) → (mensaje de error inline, sin alert)
-```
-
-### Flow 2 — Recepcionista: Registro de paciente
-```
-[Sidebar: Registrar Paciente]
-→ [Formulario: datos del paciente]
-→ (envío exitoso) → [Mensaje de éxito + limpiar formulario]
-→ (error) → (mensaje inline en el campo con error)
+1. Abre la app → ve Library (home)
+2. Ve secciones horizontales: "En progreso", "Pendientes", "Favoritos", "Colecciones"
+3. Hace scroll horizontal en cada sección
+4. Toca una portada → Media Detail
+5. Ve portada grande + metadatos + opciones (editar, marcar estado, añadir a colección)
 ```
 
-### Flow 3 — Recepcionista: Gestión de cola OPD
+### Flujo 2: Buscar y filtrar
 ```
-[Sidebar: Cola OPD]
-→ [Vista: lista de pacientes en cola, con estado y hora de llegada]
-→ Botón "Agregar a cola" → [Modal: buscar paciente existente → seleccionar → confirmar]
-→ (confirmado) → paciente aparece en la lista
-→ Botón "Eliminar" en fila → [Modal de confirmación] → (confirmado) → removido de la cola
-```
-
-### Flow 4 — Doctor: Atención de paciente
-```
-[Sidebar: Cola OPD]
-→ [Vista: lista de pacientes en cola, con botón "Atender"]
-→ Click "Atender" en fila → [Detalle del paciente + historial OPD]
-→ Click en visita OPD del historial → [Detalle de la visita + prescripciones]
-→ Botón "Crear Prescripción" → [Formulario de prescripción]
-→ (envío exitoso) → [Detalle de prescripción generada]
-→ Botón "Dar de alta" (discharge) → [Modal de confirmación] → paciente removido de cola
+1. Toca el ícono de búsqueda en la barra superior
+2. Escribe texto → resultados aparecen en tiempo real
+3. Toca filtros → panel deslizante con: tipo, creador, género, categoría, estado, plataforma
+4. Apila filtros combinados → grid se actualiza
+5. Toca un resultado → Media Detail
 ```
 
-### Flow 5 — Doctor: Búsqueda de paciente
+### Flujo 3: Agregar contenido nuevo
 ```
-[Sidebar: Buscar Paciente]
-→ [Campo de búsqueda + resultados en tiempo real]
-→ Click en resultado → [Detalle del paciente + historial OPD]
-→ (misma ruta que Flow 4 desde "Detalle del paciente")
+1. Toca "+" en la barra superior
+2. Se abre slide-over "Agregar contenido"
+3. Completa campos obligatorios (título, tipo, creador)
+4. Opcionalmente: portada, descripción, género, estado, plataforma, enlace
+5. Guarda → item aparece en la sección correspondiente
 ```
 
-### Flow 6 — Administrador: Gestión de empleados
+### Flujo 4: Organizar contenido
 ```
-[Sidebar: Empleados]
-→ [Vista: tabla de empleados con filtros por rol]
-→ Botón "Registrar Empleado" → [Formulario: datos del empleado + selección de rol]
-→ (envío exitoso) → [Tabla actualizada]
-→ Click en fila → [Modal: editar empleado]
-→ Botón "Eliminar" en fila → [Modal de confirmación] → (confirmado) → removido
+1. Navega a Collections (bottom tab)
+2. Ve grid de colecciones existentes
+3. Toca "+" → crea nueva colección (nombre, descripción)
+4. Desde Media Detail → "Añadir a colección" → selecciona colección(es)
+5. Toca una colección → ve items agrupados
+```
+
+### Flujo 5: Seguimiento de estado
+```
+1. En Library (home), ve secciones filtradas por estado
+2. "En progreso" → items que está consumiendo
+3. "Pendientes" → items por consumir
+4. "Favoritos" → items marcados como favoritos
+5. Cambia estado desde Media Detail → actualización inmediata
+```
+
+---
+
+## User flow del administrador
+
+### Flujo 6: Gestión de contenido (CRUD)
+```
+1. Activa modo admin (switch en Profile)
+2. En Library, aparece ícono de administración
+3. Accede a Admin Content → tabla densa de todos los items
+4. Puede: editar inline, eliminar, buscar, filtrar
+5. Click en fila → Media Detail (con opciones admin)
+```
+
+### Flujo 7: Carga masiva
+```
+1. En modo admin, toca "Carga masiva" en Admin Content
+2. Sube archivo (CSV/Excel)
+3. Se abre wizard: Previsualización → Revisión → Confirmación
+4. Previsualización: tabla con datos detectados, resaltado de duplicados
+5. Revisión: puede editar/eliminar items individuales antes de confirmar
+6. Confirmación: incorpora items nuevos, reporta duplicados omitidos
 ```
 
 ---
 
 ## Inventario de pantallas
 
-### Pantalla 1: Login
-- **Ruta:** `/login`
-- **Tipo:** raíz
-- **Accesible sin autenticación**
-- **Contenido:**
-  - Header: Logo del sistema + nombre "HospitalMS"
-  - Formulario centrado: email, contraseña, botón "Iniciar Sesión"
-  - Mensaje de error inline (no alert global)
-- **Jerarquía:** El formulario es el elemento central. Sin sidebar ni header de navegación.
+### Pantallas principales
 
-### Pantalla 2: Cola OPD (Recepcionista)
-- **Ruta:** `/opd-queue`
-- **Tipo:** raíz (nodo base para `[overlay]`)
-- **Rol:** Recepcionista
-- **Contenido:**
-  - Sidebar izquierda con navegación (Cola OPD activo)
-  - Título "Cola de Atención" + badge con conteo
-  - Botón "Agregar a cola" (primario, teal)
-  - Tabla/lista: paciente, hora de llegada, estado (En espera / En atención / Atendido), acciones
-  - Empty state cuando la cola está vacía
-- **Jerarquía:**
-  1. Título + botón "Agregar a cola"
-  2. Lista de pacientes en cola
-  3. Acciones por fila
+| # | Slug | Nombre | Propósito | Contenido principal | Entidades | Arquetipo |
+|---|---|---|---|---|---|---|
+| 1 | `library-home` | Library (Inicio) | Punto de entrada; browsing visual de la biblioteca personal | Secciones horizontales de portadas por estado (en progreso, pendientes, completados, favoritos) + secciones de colecciones. Header con búsqueda y botón "+". | MediaItem, Collection, Playlist | Biblioteca (#3) |
+| 2 | `search-browse` | Buscar y Explorar | Encontrar contenido con búsqueda rápida + filtros combinables | Barra de búsqueda prominente + filtros (tipo, creador, género, categoría, estado, plataforma) + grid de resultados con portadas. | MediaItem | Biblioteca (#3) |
+| 3 | `media-detail` | Detalle del contenido | Ver toda la información de un item y realizar acciones sobre él | Portada grande + título + creador + tipo + estado + calificación + notas + plataforma origen + enlace + colecciones/listas asociadas. Botones: editar, cambiar estado, favorito, añadir a colección, eliminar. | MediaItem, Category, Tag, Collection, Playlist | Biblioteca (#3) |
+| 4 | `collections-list` | Mis Colecciones | Ver y gestionar todas las colecciones | Grid de colecciones (cards con nombre + descripción + count de items + portadas preview). Botón "+". | Collection, MediaItem | Biblioteca (#3) |
+| 5 | `collections-detail` | Detalle de Colección | Ver items dentro de una colección específica | Nombre + descripción de colección + grid/portadas de items agrupados. Opciones: renombrar, eliminar colección, reordenar items. | Collection, MediaItem | Biblioteca (#3) |
+| 6 | `playlists-list` | Mis Listas | Ver y gestionar todas las listas personalizadas | Lista de listas (cards con nombre + count de items). Botón "+". Similar a colecciones pero enfocado en orden secuencial. | Playlist, MediaItem | Biblioteca (#3) |
+| 7 | `profile-settings` | Mi Perfil y Configuración | Configuración general y cambio de rol | Información del usuario, switch de rol (user/admin), configuración de preferencias. | User | Formularios (#9) |
 
-### Pantalla 3: Cola OPD (Doctor)
-- **Ruta:** `/opd-queue`
-- **Tipo:** raíz (diseño diferente al de Recepcionista — el doctor atiende, no administra)
-- **Rol:** Doctor
-- **Contenido:**
-  - Sidebar con navegación (Cola OPD activo)
-  - Título "Pacientes en Espera"
-  - Lista/cards de pacientes: nombre, hora, estado
-  - Botón "Atender" en cada card (solo para pacientes "En espera")
-  - Badge de especialidad del doctor (arriba, sutil)
-- **Jerarquía:**
-  1. Título
-  2. Cards de pacientes con botón de acción
-  3. Estado vacío / carga
+### Pantallas admin
 
-### Pantalla 4: Buscar Paciente
-- **Ruta:** `/patients/search`
-- **Tipo:** raíz
-- **Roles:** Recepcionista, Doctor
-- **Contenido:**
-  - Sidebar con navegación (Buscar Paciente activo)
-  - Campo de búsqueda prominente (ancho completo, con ícono de búsqueda)
-  - Resultados en tiempo real (debajo del campo)
-  - Cada resultado: avatar con iniciales (paleta rotativa), nombre completo, teléfono, email
-  - Click en resultado → navega a Detalle del Paciente
-- **Jerarquía:**
-  1. Campo de búsqueda
-  2. Lista de resultados
-  3. Empty state "No se encontraron pacientes"
+| # | Slug | Nombre | Propósito | Contenido principal | Entidades | Arquetipo |
+|---|---|---|---|---|---|---|
+| 8 | `admin-content` | Gestión de Contenido (Admin) | CRUD completo sobre items como administrador | Tabla densa de items con columnas: título, tipo, creador, estado, fecha agregado. Acciones inline: editar, eliminar. Búsqueda y filtros rápidos. Botón "Carga masiva". | MediaItem | Registros (#1) |
+| 9 | `bulk-upload` | Carga Masiva | Subir archivo con múltiples items y revisar antes de incorporar | Wizard de 3 pasos: (1) Subir archivo, (2) Previsualizar datos en tabla con highlighting de duplicados, (3) Confirmar y reportar resultados. | MediaItem | Formularios (#9) |
 
-### Pantalla 5: Registrar Paciente
-- **Ruta:** `/patients/register`
-- **Tipo:** raíz
-- **Rol:** Recepcionista
-- **Contenido:**
-  - Sidebar con navegación (Registrar Paciente activo)
-  - Título "Registrar Nuevo Paciente"
-  - Formulario: nombre, apellido, género (select), fecha de nacimiento, teléfono, email, dirección
-  - Botón "Registrar" (primario) + "Cancelar" (secundario)
-  - Validación inline en cada campo
-  - Mensaje de éxito al registrar
-- **Jerarquía:**
-  1. Título
-  2. Formulario (campos en layout de 2 columnas)
-  3. Botones de acción
+### Overlays (estados derivados de pantallas raíz)
 
-### Pantalla 6: Detalle del Paciente + Historial
-- **Ruta:** `/patients/:id`
-- **Tipo:** raíz
-- **Roles:** Recepcionista, Doctor
-- **Contenido:**
-  - Sidebar con navegación
-  - Breadcrumb: Buscar Paciente > [Nombre del paciente]
-  - **Sección superior:** Card con información del paciente (avatar con iniciales, nombre, teléfono, email, dirección, fecha de nacimiento, género)
-  - **Sección inferior:** "Historial de Visitas OPD" — tabla con fecha, diagnóstico, estado (alta/no alta), y link a detalle de cada visita
-  - Botón "Crear Prescripción" (solo si el usuario es Doctor)
-- **Jerarquía:**
-  1. Información del paciente (card)
-  2. Historial OPD (tabla)
-  3. Acciones (crear prescripción)
-
-### Pantalla 7: Detalle de Visita OPD + Prescripciones
-- **Ruta:** `/opd/:id`
-- **Tipo:** pantalla (derivada de Detalle del Paciente)
-- **Contenido:**
-  - Breadcrumb: Paciente > [Nombre] > Visita OPD
-  - **Card de información de la visita:** ID, fecha, diagnóstico, fecha de admisión, fecha de alta, estado (alta/pendiente)
-  - **Sección "Prescripciones":** lista de prescripciones asociadas a esta visita — fecha, medicamento, nota
-  - Botón "Crear Prescripción" (solo Doctor)
-  - Botón "Dar de Alta" (solo si no está dado de alta, solo Doctor)
-- **Jerarquía:**
-  1. Info de la visita
-  2. Lista de prescripciones
-  3. Acciones
-
-### Pantalla 8: Crear Prescripción
-- **Ruta:** `/prescriptions/create` (o modal sobre Detalle de Visita OPD)
-- **Tipo:** overlay (modal sobre Detalle de Visita OPD)
-- **Rol:** Doctor
-- **Contenido:**
-  - Modal centrado, ancho ~600px
-  - Título "Nueva Prescripción"
-  - Formulario: medicamento (textarea, línea por medicamento), nota clínica (textarea)
-  - Botón "Guardar Prescripción" (primario) + "Cancelar"
-  - Validación: medicamento es obligatorio
-- **Jerarquía:**
-  1. Título del modal
-  2. Formulario
-  3. Botones de acción
-
-### Pantalla 9: Detalle de Prescripción
-- **Ruta:** `/prescriptions/:id`
-- **Tipo:** pantalla (accesible desde historial OPD)
-- **Contenido:**
-  - Breadcrumb: Paciente > [Nombre] > Visita OPD > Prescripción
-  - **Card de prescripción:** ID, fecha, nombre del doctor, paciente asociado
-  - **Medicamento:** texto formateado, legible (nunca bloque de texto crudo)
-  - **Notas clínicas:** texto con formato
-  - Diseño optimizado para legibilidad (el problema #1 del sistema actual)
-- **Jerarquía:**
-  1. Encabezado de la prescripción (meta info)
-  2. Medicamento (destacado, fácil de leer)
-  3. Notas clínicas
-
-### Pantalla 10: Empleados (Admin)
-- **Ruta:** `/employees`
-- **Tipo:** raíz (nodo base para `[overlay]`)
-- **Rol:** Administrador
-- **Contenido:**
-  - Sidebar con navegación (Empleados activo)
-  - Título "Gestión de Empleados" + badge con conteo
-  - Filtros por rol (tabs o chips: Todos, Doctores, Recepcionistas, Admins)
-  - Botón "Registrar Empleado" (primario)
-  - Tabla: ID, nombre completo, email, teléfono, rol (badge de color), acciones (editar/eliminar)
-  - Empty state
-- **Jerarquía:**
-  1. Título + filtros + botón
-  2. Tabla de empleados
-  3. Acciones por fila
-
-### Pantalla 11: Formulario Empleado (Crear/Editar)
-- **Ruta:** `/employees/create` o `/employees/:id/edit`
-- **Tipo:** overlay (modal sobre tabla de empleados)
-- **Rol:** Administrador
-- **Contenido:**
-  - Modal centrado, ancho ~600px
-  - Título "Registrar Empleado" o "Editar Empleado"
-  - Formulario: nombre, apellido, email, teléfono, género (select), fecha de nacimiento, rol (select: Admin/Doctor/Receptionist), especialidad (campo condicional, solo visible si rol = Doctor)
-  - Botón "Guardar" (primario) + "Cancelar"
-- **Jerarquía:**
-  1. Título del modal
-  2. Formulario (2 columnas)
-  3. Botones de acción
+| # | Slug | Nodo padre | Disparador | Contenido | Tipo |
+|---|---|---|---|---|---|
+| 10 | `add-edit-media` | `library-home` / `media-detail` | Botón "+" o "Editar" | Slide-over panel con formulario de campos del MediaItem. Campos obligatorios: título, tipo, creador. Opcionales: portada, descripción, género, categoría, estado, calificación, notas, plataforma, enlace. | `[overlay]` |
+| 11 | `delete-confirmation` | `media-detail` / `admin-content` | Botón "Eliminar" | Modal de confirmación: "¿Eliminar [título]?" con botones Cancelar/Eliminar. | `[overlay]` |
+| 12 | `add-to-collection` | `media-detail` | Botón "Añadir a colección" | Modal/drawer con lista de colecciones existentes + opción crear nueva. Checkboxes para selección múltiple. | `[overlay]` |
 
 ---
 
 ## Árbol de estados por pantalla
 
-### Cola OPD — Recepcionista
+### `library-home` (pantalla raíz)
 ```
-<Cola OPD (Recepcionista): base>
-├─ Estado base: lista de pacientes en cola con datos
-├─ [overlay] "Agregar a cola" — disparador: botón "Agregar a cola"
-│  └─ Modal: búsqueda de paciente existente + selección + confirmación
-├─ [overlay] "Confirmar eliminación" — disparador: ícono eliminar en fila
-│  └─ Modal de confirmación: "¿Remover a [nombre] de la cola?"
-└─ [caso-borde] vacío: "No hay pacientes en la cola"
+<library-home>
+├─ Estado base: secciones horizontales con portadas
+├─ [caso-borde] vacío: "Tu biblioteca está vacía. ¡Agrega tu primer contenido!" + botón CTA
+├─ [caso-borde] carga: skeleton placeholders de portadas
+└─ [caso-borde] error: "No se pudo cargar tu biblioteca" + retry
 ```
 
-### Cola OPD — Doctor
+### `search-browse` (pantalla raíz)
 ```
-<Cola OPD (Doctor): base>
-├─ Estado base: cards de pacientes en espera con botón "Atender"
-├─ [caso-borde] vacío: "No hay pacientes en espera"
-└─ [caso-borde] error: "Error al cargar la cola"
-```
-
-### Buscar Paciente
-```
-<Buscar Paciente: base>
-├─ Estado base: campo de búsqueda + lista de resultados
-├─ [caso-borde] vacío (sin búsqueda): "Ingrese un nombre o ID para buscar"
-├─ [caso-borde] vacío (con búsqueda): "No se encontraron pacientes"
-└─ [caso-borde] carga: skeleton de resultados
+<search-browse>
+├─ Estado base: barra de búsqueda + filtros + grid de resultados
+├─ [caso-borde] sin resultados: "No encontramos nada con esos filtros"
+├─ [caso-borde] carga: skeleton grid
+└─ [caso-borde] error: mensaje de error + retry
 ```
 
-### Detalle del Paciente + Historial
+### `media-detail` (pantalla raíz)
 ```
-<Detalle Paciente: base>
-├─ Estado base: info del paciente + historial OPD
-├─ [caso-borde] sin historial: "Este paciente no tiene visitas registradas"
-└─ [caso-borde] error: "Error al cargar información del paciente"
-```
-
-### Empleados (Admin)
-```
-<Empleados (Admin): base>
-├─ Estado base: tabla de empleados con datos
-├─ [overlay] "Registrar Empleado" — disparador: botón "Registrar Empleado"
-│  └─ Modal con formulario
-├─ [overlay] "Editar Empleado" — disparador: ícono editar en fila
-│  └─ Modal con formulario pre-llenado
-├─ [overlay] "Confirmar eliminación" — disparador: ícono eliminar en fila
-│  └─ Modal de confirmación
-├─ [caso-borde] vacío: "No hay empleados registrados"
-└─ [caso-borde] error: "Error al cargar la lista de empleados"
+<media-detail>
+├─ Estado base: portada + metadatos completos
+├─ [overlay] add-edit-media — disparador: botón "Editar"
+├─ [overlay] delete-confirmation — disparador: botón "Eliminar"
+├─ [overlay] add-to-collection — disparador: botón "Añadir a colección"
+├─ [caso-borde] no encontrado: "Este contenido no existe" + volver
+└─ [caso-borde] carga: skeleton de ficha
 ```
 
-### Crear Prescripción (Modal)
+### `collections-list` (pantalla raíz)
 ```
-<Crear Prescripción: overlay sobre Detalle de Visita OPD>
-├─ Estado base: formulario vacío
-├─ [overlay] "Éxito" — disparador: envío exitoso
-│  └─ Mensaje inline: "Prescripción creada exitosamente"
-└─ [caso-borde] error de validación: campos requeridos resaltados
+<collections-list>
+├─ Estado base: grid de colecciones
+├─ [overlay] crear colección — disparador: botón "+"
+├─ [caso-borde] vacío: "Aún no tienes colecciones. ¡Crea una!"
+├─ [caso-borde] carga: skeleton grid
+└─ [caso-borde] error: mensaje + retry
 ```
 
-### Login
+### `collections-detail` (pantalla raíz)
 ```
-<Login: pantalla completa>
-├─ Estado base: formulario vacío
-├─ [caso-borde] credenciales incorrectas: mensaje de error inline bajo el campo
-└─ [caso-borde] campos vacíos: validación inline al intentar enviar
+<collections-detail>
+├─ Estado base: portadas de items en la colección
+├─ [overlay] editar colección — disparador: ícono editar
+├─ [caso-borde] colección vacía: "Esta colección está vacía"
+├─ [caso-borde] carga: skeleton
+└─ [caso-borde] no encontrada: "Colección no encontrada"
+```
+
+### `playlists-list` (pantalla raíz)
+```
+<playlists-list>
+├─ Estado base: lista de listas con count de items
+├─ [overlay] crear lista — disparador: botón "+"
+├─ [caso-borde] vacío: "Crea tu primera lista personalizada"
+├─ [caso-borde] carga: skeleton
+└─ [caso-borde] error: mensaje + retry
+```
+
+### `admin-content` (pantalla raíz — solo admin)
+```
+<admin-content>
+├─ Estado base: tabla densa de items con acciones
+├─ [overlay] delete-confirmation — disparador: botón eliminar en fila
+├─ [pantalla] bulk-upload — disparador: botón "Carga masiva"
+├─ [caso-borde] vacío: "No hay contenido registrado"
+├─ [caso-borde] carga: skeleton tabla
+└─ [caso-borde] error: mensaje + retry
+```
+
+### `bulk-upload` (pantalla raíz — solo admin)
+```
+<bulk-upload>
+├─ Estado base: wizard de 3 pasos (subir → previsualizar → confirmar)
+├─ [caso-borde] archivo inválido: "El archivo no tiene el formato correcto"
+├─ [caso-borde] duplicados detectados: highlights en tabla + conteo
+├─ [caso-borde] carga: processing spinner
+└─ [caso-borde] éxito: "Se incorporaron X items. Y duplicados omitidos."
+```
+
+### `profile-settings` (pantalla raíz)
+```
+<profile-settings>
+├─ Estado base: info usuario + switch rol + preferencias
+├─ [caso-borde] carga: skeleton
+└─ [caso-borde] error: mensaje
 ```
 
 ---
 
-## Pantallas derivadas NO requeridas (decisiones explícitas)
+## Jerarquía de navegación
 
-- **No se genera pantalla de "Dashboard/Inicio"** — Cada rol entra directamente a su pantalla principal (Cola OPD para Recepcionista/Doctor, Empleados para Admin). Un dashboard genérico agregaría un paso innecesario en un sistema donde la eficiencia es clave.
-- **No se genera pantalla de "Configuración"** — Fuera del scope del dominio actual. Si se necesita en el futuro, se agrega como pantalla nueva.
-- **No se genera pantalla de "Notificaciones"** — El sistema actual no tiene flujo de notificaciones. Las acciones inmediatas (éxito/error) se manejan inline.
-- **"Cerrar sesión"** es una acción (botón en el header), no una pantalla — se ejecuta y redirige a Login.
+### Mobile (bottom tabs)
+```
+┌─────────────────────────────────┐
+│          Header (logo + search) │
+├─────────────────────────────────┤
+│                                 │
+│         Contenido actual        │
+│       (Library / Search /       │
+│        Collections / Profile)   │
+│                                 │
+├─────────────────────────────────┤
+│  📚 Library │ 🔍 Buscar │ 📁 Colecciones │ 👤 Perfil │
+└─────────────────────────────────┘
+```
+
+### Desktop (topbar horizontal)
+```
+┌─────────────────────────────────────────────────────────┐
+│ Logo │ Library │ Buscar │ Colecciones │ Listas │ Perfil  │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│                    Contenido                            │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Transiciones entre pantallas
+- **Library → Media Detail**: push (navegación estándar)
+- **Media Detail → Add/Edit**: slide-over panel (no navega, se superpone)
+- **Library → Search**: transición de contenido (misma estructura, cambia el panel principal)
+- **Cualquier pantalla → Collections Detail**: push
+- **Admin Content → Bulk Upload**: push (navegación estándar)
+- **Cualquier pantalla → Profile**: push
+
+---
+
+**¿Confirmas este inventario de pantallas y estructura de navegación? ¿Alguna pantalla que agregar, eliminar o modificar antes de pasar a Fase 4 (generación en Stitch)?**

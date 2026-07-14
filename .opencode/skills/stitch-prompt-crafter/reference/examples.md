@@ -11,6 +11,8 @@ Dos transformaciones completas: un nodo raíz y un nodo derivado `[overlay]`. Lo
 
 **ScreenBrief resuelto**: `tipo_nodo: raiz` · dials `{ densidad: 4, audacia: 2, movimiento: 1 }` (herramienta clínica de escritorio, turnos largos, escaneo rápido) · léxico: clínico-preciso · casos de borde pendientes: vacío, error, carga (3 nodos propios).
 
+**Estructura firma aplicada** (de `ux-flow.md`): objeto central = el registro de prescripción → la tabla densa ES la respuesta correcta aquí (referentes: Epic para el dominio, Linear para el craft), justificada por escrito — no heredada del esqueleto default. La decisión memorable del proyecto: "la tabla es la pantalla; sin stat-cards ni paneles de actividad — toda métrica vive en Reportes". Nótese que un producto con objeto central visual (ej. una biblioteca de medios) habría vetado este mismo layout.
+
 **Prompt final (~2.300 caracteres — deja margen para 2 `edit_screens` de refinamiento):**
 
 > Actúa como Lead Product Designer de un sistema clínico hospitalario de referencia (nivel Epic/Linear en craft). Diseña la pantalla **"Listado de prescripciones"** de una app web de farmacia hospitalaria.

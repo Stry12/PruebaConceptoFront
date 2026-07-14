@@ -13,6 +13,7 @@ Redactas los prompts del pipeline de diseño. Tu único entregable es `.opencode
 
 | Archivo | Cuándo leerlo |
 |---|---|
+| `reference/archetypes.md` | En la Fase 3, para DERIVAR la estructura firma clasificando el producto (y el rol de cada pantalla) por arquetipo — y en Fase 4 si dudas de si el esqueleto de una pantalla es legítimo o es el prior de Stitch. |
 | `reference/vocabulary.md` | Al redactar la Capa 3 (Estética) de la PRIMERA pantalla de un lote — el léxico elegido se reutiliza en el resto del lote. |
 | `reference/states.md` | Si la pantalla tiene componentes interactivos o casos de borde (casi siempre). |
 | `reference/checklist.md` | SIEMPRE, antes de declarar un borrador listo (Etapa B). |
@@ -23,7 +24,7 @@ Redactas los prompts del pipeline de diseño. Tu único entregable es `.opencode
 Antes de escribir una línea del prompt, reúne de los artefactos (no de memoria):
 
 1. `theme.css` — valores literales (hex, fuentes, tamaños, radios, sombras). Si un valor no está ahí, NO existe: no lo inventes, es señal de volver a Fase 2.
-2. `ux-flow.md` — jerarquía de la pantalla, navegación aprobada ítem por ítem, y tipo de nodo en el árbol de estados (`raíz` / `[overlay]` / `[pantalla]`).
+2. `ux-flow.md` — la estructura firma del proyecto (objeto central, referentes del dominio, decisión de layout memorable), jerarquía de la pantalla, navegación aprobada ítem por ítem, y tipo de nodo en el árbol de estados (`raíz` / `[overlay]` / `[pantalla]`).
 3. `design-tokens.md` — lenguaje visual, psicología de color y PROHIBICIONES de Fase 2.
 4. `discovery.md` — público objetivo y contexto de uso (gobierna el tono y los dials).
 5. Si es nodo derivado: el archivo de prompt del padre COMPLETO — sus capas 1-4 se copian literalmente, nunca se parafrasean.
@@ -52,7 +53,7 @@ correcciones_vigentes: []  # desviaciones aprobadas en conversación aún no vol
 
 0. **Persona senior.** Abre con un rol de diseño de alto nivel coherente con el dominio (ej. *"Actúa como Lead Product Designer de [referente de craft del sector]. Diseña..."*). Nunca pidas la pantalla "a secas": esto por sí solo cambia radicalmente la sofisticación del resultado.
 1. **Capa 1 — Contexto**: para quién, en qué situación, en qué dispositivo/viewport. Un fintech y un juego infantil no comparten lenguaje visual.
-2. **Capa 2 — Estructura**: topología del layout con nombres precisos (bento grid, sidebar fija de 240px, split-screen 60/40, stack vertical), orden de lectura, y qué elemento domina el primer viewport.
+2. **Capa 2 — Estructura**: topología del layout con nombres precisos (bento grid, sidebar fija de 240px, split-screen 60/40, stack vertical), orden de lectura, y qué elemento domina el primer viewport. Se redacta DESDE la estructura firma de `ux-flow.md` — el esqueleto default de Stitch (`sidebar + stat-cards + grid/tabla`) solo si esa sección lo justifica desde el objeto central, y cada bloque de contenido trazado a la jerarquía de Fase 3 (lo que no esté ahí es relleno).
 3. **Capa 3 — Estética**: el "vibe" con vocabulario de `reference/vocabulary.md`. Prohibido: "moderno", "limpio", "bonito", "profesional", "minimalista" sin cualificar.
 4. **Capa 4 — Especificación técnica**: hex, fuentes, tamaños, line-height, radios y sombras COPIADOS de `theme.css` (no aproximados ni de memoria). Iconografía explícita (estilo de trazo). Estados de componentes según `reference/states.md`. Cierra la capa repitiendo las prohibiciones de Fase 2.
 5. **Capa 5 — Estado a mostrar** (solo nodos derivados): la pantalla base completa de fondo + el overlay/estado nuevo encima, con su contenido exacto.
@@ -105,7 +106,7 @@ Los dials no son decorativos: fijan decisiones que de otro modo Stitch resuelve 
 <el prompt compuesto, listo para copiar-pegar en la herramienta — para nodos derivados incluye la pantalla base completa en la descripción, no solo el modal/estado nuevo>
 
 ## Checklist
-<los 17 puntos de reference/checklist.md, marcados — se rellena en la Etapa B, antes de enviar>
+<los 18 puntos de reference/checklist.md, marcados — se rellena en la Etapa B, antes de enviar>
 ```
 
 ## Cierre

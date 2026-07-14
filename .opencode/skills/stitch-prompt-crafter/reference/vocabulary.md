@@ -27,7 +27,9 @@ Regla única: sustituye todo adjetivo genérico por una descripción concreta y 
 
 ## Topología de layout (Capa 2 — usa estos nombres, no "un layout con cosas")
 
-`sidebar fija de Npx` · `bento grid de proporciones variables` · `split-screen 60/40` · `stack vertical de secciones` · `masonry` · `tabla densa de ancho completo` · `panel maestro-detalle` · `wizard/stepper` · `jerarquía en F` (escaneo de listas) · `jerarquía en Z` (landing). Declara siempre: orden de lectura y qué elemento domina el primer viewport (lo que se ve sin scroll).
+`sidebar fija de Npx` · `bento grid de proporciones variables` · `split-screen 60/40` · `stack vertical de secciones` · `masonry` · `estanterías de scroll horizontal` · `tabla densa de ancho completo` · `panel maestro-detalle` · `wizard/stepper` · `jerarquía en F` (escaneo de listas) · `jerarquía en Z` (landing). Declara siempre: orden de lectura y qué elemento domina el primer viewport (lo que se ve sin scroll).
+
+Esta lista no es un menú para elegir al azar: la topología se deriva de la **estructura firma** aprobada al inicio de `ux-flow.md` (objeto central del producto + referentes reales del dominio + decisión de layout memorable). Si el objeto central es visual (portadas, fotos, mapas, conversaciones), la respuesta casi nunca es una tabla con stat-cards.
 
 ## Estrategia de color (declárala, no la dejes emerger)
 
@@ -42,6 +44,8 @@ Declara: estilo de trazo (`trazo fino 1.5px` / `sólido` / `duotone`), tamaño b
 
 ## Léxico anti-default (prohibiciones que van en cada prompt)
 
+- **El esqueleto "admin SaaS" por defecto** (`sidebar + fila de stat-cards + grid/tabla de contenido`): es el cream/beige de la estructura — la plantilla a la que Stitch regresa para cualquier dominio, y hace que dos productos con identidades visuales distintas se sientan la misma app. Usarlo exige justificación escrita desde el objeto central del producto (la estructura firma de `ux-flow.md`), nunca se hereda en silencio.
+- **Stat-cards y widgets no pedidos**: Stitch añade filas de métricas de relleno en pantallas de listado ("24 Total", "3 Pendientes"...). Todo bloque de contenido del prompt debe trazarse a la jerarquía de Fase 3 — si no está en `ux-flow.md`, se elimina del borrador, igual que la navegación fantasma.
 - **Cream/sand/beige como fondo "cálido"**: es EL default de IA. La calidez se carga en acento + tipografía + imágenes, no en el fondo. Fondo = blanco/neutro verdadero o un tono claramente de la marca.
 - **Cards anidadas**: siempre mal. Cards solo cuando son la mejor affordance, no como contenedor por defecto.
 - **Sombras duras / genéricas**: especifica la sombra exacta de `theme.css` (típicamente ≤10% de opacidad).

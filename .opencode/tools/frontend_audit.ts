@@ -8,6 +8,7 @@ const SCRIPTS: Record<string, string> = {
   routes: "route-reachability.mjs",
   handlers: "handler-wiring.mjs",
   implied: "implied-screens.mjs",
+  skeleton: "skeleton-check.mjs",
   tokens: "token-fidelity.mjs",
   registry: "registry-sync.mjs",
   layers: "unlayered-css.mjs",
@@ -22,6 +23,9 @@ export default tool({
     "'implied' (texto tipo 'Olvidaste tu contraseña'/'Notificaciones'/'Configuración' que implica una pantalla propia — " +
     "úsala con `path` apuntando a `.opencode/artifacts/design/screens` para chequear mockups de Stitch, o sin `path` " +
     "para chequear el código ya construido, donde además marca los que no tienen ningún destino real), " +
+    "'skeleton' (firma del esqueleto default 'admin SaaS': sidebar + fila de ≥3 stat-cards, o stat-cards de relleno — " +
+    "cada hallazgo es una candidata a cruzar contra la estructura firma y jerarquía de ux-flow.md; por defecto escanea " +
+    "design/screens y pagesDir, o usa `path` para una ruta concreta), " +
     "'tokens' (valores hex hardcodeados que ya tienen token en global.css), " +
     "'registry' (componentes fantasma: registrados en frontend-architecture.md pero inexistentes en el código), " +
     "'layers' (CSS sin @layer que anula las utilidades de Tailwind v4 — ej. un reset global * {margin:0;padding:0}), " +
@@ -29,7 +33,7 @@ export default tool({
     "auditorías de frontend_engineer/ui_designer: un FAIL debe corregirse o justificarse antes de dar una pantalla por terminada.",
   args: {
     check: tool.schema
-      .enum(["all", "css", "routes", "handlers", "implied", "tokens", "registry", "layers"])
+      .enum(["all", "css", "routes", "handlers", "implied", "skeleton", "tokens", "registry", "layers"])
       .describe("Qué auditoría ejecutar. Usa 'all' para el veredicto completo."),
     root: tool.schema
       .string()
@@ -43,7 +47,7 @@ export default tool({
       .string()
       .optional()
       .describe(
-        "Solo para check:'implied'. Ruta explícita a escanear en vez de pagesDir/componentsDir del proyecto " +
+        "Solo para check:'implied' o 'skeleton'. Ruta explícita a escanear en vez de las rutas por defecto " +
           "(ej. '.opencode/artifacts/design/screens' para auditar los mockups de Stitch antes de construir el código)."
       ),
   },
