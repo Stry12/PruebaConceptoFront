@@ -1,0 +1,17 @@
+{
+  "base": "http://localhost:5173",
+  "salida": ".opencode/artifacts/art-direction/shots/estados",
+  "pantallas": [
+    {
+      "slug": "biblioteca",
+      "ruta": "/",
+      "estados": [
+        { "nombre": "base" },
+        { "nombre": "menu-item-abierto", "acciones": [ { "click": "button[aria-haspopup='menu'] >> nth=0" } ] },
+        { "nombre": "modal-agregar", "acciones": [ { "click": "[aria-label='Agregar nuevo ítem']" } ] },
+        { "nombre": "card-hover", "acciones": [ { "hover": "article >> nth=0" } ] },
+        { "nombre": "primer-foco", "acciones": [ { "press": "Tab" }, { "press": "Tab" }, { "press": "Tab" } ] }
+      ]
+    }
+  ]
+}

@@ -9,6 +9,8 @@ Redactas los prompts del pipeline de diseño. Tu único entregable es `.opencode
 
 **Por qué existe**: Stitch por defecto produce interfaces conservadoras, planas y predecibles ("AI slop"). Un prompt vago produce un resultado genérico. Esta metodología es obligatoria para CUALQUIER prompt — no es opcional ni un "extra de calidad".
 
+**Nota de terminología**: donde esta skill y sus referencias dicen "Fase 2" se refieren a la etapa de estrategia visual/tokens — hoy propiedad de `color_strategist` (E2), que produce `design-tokens.md` y `theme.css`. La dirección creativa y la identidad de marca las elige `brand_strategist` en `design/brand-brief.md` (E1). "Fase 3" sigue siendo la UX de `ui_designer`.
+
 ## Archivos de referencia (bajo demanda, no todos siempre)
 
 | Archivo | Cuándo leerlo |
@@ -18,6 +20,7 @@ Redactas los prompts del pipeline de diseño. Tu único entregable es `.opencode
 | `reference/states.md` | Si la pantalla tiene componentes interactivos o casos de borde (casi siempre). |
 | `reference/checklist.md` | SIEMPRE, antes de declarar un borrador listo (Etapa B). |
 | `reference/examples.md` | Solo en las primeras 1-2 pantallas de un proyecto nuevo; después ya tienes los patrones. |
+| `reference/refinement.md` | Al recibir directivas de `art_director` en el loop de calidad de la pantalla firma — cómo traducirlas a llamadas `edit_screens` precisas y registrarlas. |
 
 ## Entrada obligatoria: el ScreenBrief
 
@@ -27,7 +30,8 @@ Antes de escribir una línea del prompt, reúne de los artefactos (no de memoria
 2. `ux-flow.md` — la estructura firma del proyecto (objeto central, referentes del dominio, decisión de layout memorable), jerarquía de la pantalla, navegación aprobada ítem por ítem, y tipo de nodo en el árbol de estados (`raíz` / `[overlay]` / `[pantalla]`).
 3. `design-tokens.md` — lenguaje visual, psicología de color y PROHIBICIONES de Fase 2.
 4. `discovery.md` — público objetivo y contexto de uso (gobierna el tono y los dials).
-5. Si es nodo derivado: el archivo de prompt del padre COMPLETO — sus capas 1-4 se copian literalmente, nunca se parafrasean.
+5. `brand-brief.md` — personalidad, keywords visuales y la dirección creativa elegida (gobierna la Capa 3 y la audacia).
+6. Si es nodo derivado: el archivo de prompt del padre COMPLETO — sus capas 1-4 se copian literalmente, nunca se parafrasean.
 
 Si falta cualquiera de estas fuentes, detente y repórtalo — un prompt sin fuente es un prompt inventado.
 
@@ -46,9 +50,10 @@ fuentes:
   ux_flow: .opencode/artifacts/design/ux-flow.md
   tokens: .opencode/artifacts/design/design-tokens.md
   discovery: .opencode/artifacts/design/discovery.md
+  brand_brief: .opencode/artifacts/design/brand-brief.md
 dials: { densidad: 1-5, audacia: 1-5, movimiento: 1-3 }
 casos_borde_pendientes: [vacio, error, carga]   # cada uno será nodo propio del árbol
-correcciones_vigentes: []  # desviaciones aprobadas en conversación aún no volcadas a artefactos — debe tender a vacío; si hay algo aquí, actualiza el artefacto fuente cuanto antes
+correcciones_vigentes: []  # desviaciones aprobadas en conversación aún no volcadas a artefactos — debe tender a vacío; si hay algo aquí, actualiza el artefacto fuente cuanto antes. En el loop de calidad, las desviaciones que introduce una iteración se anotan aquí hasta que la extracción/reconciliación post-aprobación las vuelque (ver reference/refinement.md)
 ```
 
 ## Composición del prompt (en este orden)
@@ -63,7 +68,7 @@ correcciones_vigentes: []  # desviaciones aprobadas en conversación aún no vol
 ## Dials (declara los tres en cada prompt, derivados de design-tokens.md y discovery.md)
 
 - **Densidad 1-5**: 1 = aireado editorial (mucho blanco, pocas piezas por viewport) · 5 = denso tipo terminal de datos (tablas compactas, filas de 40-44px).
-- **Audacia 1-5**: 1 = neutro utilitario (marca casi invisible) · 5 = la marca domina la superficie (color drenched, tipografía display). El rango lo fija el **registro** de la pantalla: `producto` → 1-3, `marketing` → 3-5 (ver `reference/archetypes.md`). Si la Fase 2 eligió una dirección creativa, la audacia y la Capa 3 salen de ella.
+- **Audacia 1-5**: 1 = neutro utilitario (marca casi invisible) · 5 = la marca domina la superficie (color drenched, tipografía display). El rango lo fija el **registro** de la pantalla: `producto` → 1-3, `marketing` → 3-5 (ver `reference/archetypes.md`). Si el `brand-brief.md` eligió una dirección creativa, la audacia y la Capa 3 salen de ella.
 - **Movimiento 1-3**: qué microinteracciones se INSINÚAN visualmente. Stitch genera HTML/CSS estático: describe el estado visible (hover, focus, selected), no la transición. Detalle en `reference/states.md`.
 
 Los dials no son decorativos: fijan decisiones que de otro modo Stitch resuelve con su default genérico, y mantienen coherencia entre pantallas del mismo lote (mismo dial → misma densidad percibida). Se definen una vez por lote y solo cambian con justificación anotada en el ScreenBrief.
@@ -109,6 +114,10 @@ Los dials no son decorativos: fijan decisiones que de otro modo Stitch resuelve 
 
 ## Checklist
 <los 18 puntos de reference/checklist.md, marcados — se rellena en la Etapa B, antes de enviar>
+
+## Iteraciones
+<solo si la pantalla pasó por el loop de calidad: una entrada por iteración con directivas atendidas,
+ prompt exacto de cada edit_screens y resultado — formato en reference/refinement.md>
 ```
 
 ## Cierre

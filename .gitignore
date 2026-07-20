@@ -4,9 +4,16 @@
 !/.opencode/**
 !/hospital-frontend/
 !/hospital-frontend/**
+!/mediavault-frontend/
+!/mediavault-frontend/**
 
 .opencode/node_modules/
 .opencode/dist/
+.opencode/.dev-server/
 hospital-frontend/node_modules/
 hospital-frontend/dist/
+mediavault-frontend/node_modules/
+mediavault-frontend/dist/
+mediavault-frontend/test-results/
+mediavault-frontend/playwright-report/
 *.tsbuildinfo

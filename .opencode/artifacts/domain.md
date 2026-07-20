@@ -1,83 +1,116 @@
-# Dominio — Mi Biblioteca Multimedia
+# Dominio — MediaVault (Biblioteca Multimedia Personal)
 
 ## Entidades
 
-### MediaItem (elemento de biblioteca)
+### User
 | Atributo | Tipo | Notas |
 |---|---|---|
-| id | UUID | PK |
+| id | string (uuid) | PK |
+| name | string | Nombre visible |
+| email | string | Único por usuario |
+| passwordHash | string | Nunca en claro |
+| role | enum: `user`, `admin` | `admin` puede cargar contenido masivo |
+| createdAt | Date | Registro |
+
+### MediaItem (entidad central)
+| Atributo | Tipo | Notas |
+|---|---|---|
+| id | string (uuid) | PK |
+| userId | string | FK → User. Propietario del registro |
 | title | string | Obligatorio |
-| description | string? | Sin límite de largo |
-| coverImage | string (URL) | Portada; nullable |
-| type | enum | `book`, `series`, `film`, `documentary`, `manga`, `comic`, `magazine`, `audiobook`, `podcast`, `course`, `other` |
-| creator | string | Autor, director o creador |
-| genre | string? | Género literario/audiovisual |
-| status | enum | `pending`, `in_progress`, `completed`, `abandoned`, `favorite` |
-| addedAt | ISO-8601 datetime | Timestamp de alta |
-| consumedAt | ISO-8601 date? | Fecha de consumo (puede ser null si está pendiente) |
-| rating | int (1-5)? | Calificación personal |
-| notes | string? | Comentarios/libretas |
-| sourcePlatform | string? | Plataforma de origen |
-| sourceUrl | string (URL)? | Enlace de descarga/compra/visualización |
-| createdAt | ISO-8601 datetime | Audit |
-| updatedAt | ISO-8601 datetime | Audit |
+| coverImage | string (URL) | Portada. Nullable (sin imagen) |
+| description | string | Resumen o sinopsis. Nullable |
+| creator | string | Autor / director / creador |
+| type | enum: `book`, `series`, `film`, `documentary`, `manga`, `comic`, `magazine`, `audiobook`, `podcast`, `course`, `other` | Tipo de contenido |
+| genre | string | Género temático (ej. "Ciencia ficción", "Programación") |
+| categoryId | string | FK → Category. Nullable (sin categoría) |
+| status | enum: `pending`, `consuming`, `completed`, `abandoned`, `favorite` | Estado de consumo |
+| addedAt | Date | Cuándo se agregó |
+| consumedAt | Date \| null | Cuándo se terminó de consumir |
+| personalRating | number (1-5) \| null | Calificación propia |
+| notes | string | Comentarios / notas personales. Nullable |
+| platform | string | Sitio u origen (ej. "Amazon Kindle", "Netflix", "YouTube") |
+| sourceUrl | string (URL) | Enlace de descarga / compra / visualización. Nullable |
+| isFavorite | boolean | Default false. Acceso rápido a favoritos |
 
-### Category (categoría)
+### Category
 | Atributo | Tipo | Notas |
 |---|---|---|
-| id | UUID | PK |
-| name | string | Único |
-| description | string? | |
+| id | string (uuid) | PK |
+| userId | string | FK → User. Categorías por usuario |
+| name | string | Nombre de la categoría |
 
-### Tag (etiqueta)
+### Tag
 | Atributo | Tipo | Notas |
 |---|---|---|
-| id | UUID | PK |
-| name | string | Único |
+| id | string (uuid) | PK |
+| userId | string | FK → User. Etiquetas por usuario |
+| name | string | Nombre de la etiqueta |
 
-### Collection (colección)
+### MediaItemTag (relación N:N)
 | Atributo | Tipo | Notas |
 |---|---|---|
-| id | UUID | PK |
-| name | string | Único |
-| description | string? | |
+| mediaItemId | string | FK → MediaItem |
+| tagId | string | FK → Tag |
 
-### Playlist (lista personalizada)
+### Collection
 | Atributo | Tipo | Notas |
 |---|---|---|
-| id | UUID | PK |
-| name | string | Único |
-| description | string? | |
+| id | string (uuid) | PK |
+| userId | string | FK → User |
+| name | string | Nombre de la colección |
+| description | string | Descripción. Nullable |
+| createdAt | Date | Creación |
 
-### User (usuario)
+### CollectionItem (relación N:N)
 | Atributo | Tipo | Notas |
 |---|---|---|
-| id | UUID | PK |
-| email | string | Único |
-| name | string | |
-| role | enum | `user`, `admin` |
-| createdAt | ISO-8601 datetime | |
+| collectionId | string | FK → Collection |
+| mediaItemId | string | FK → MediaItem |
 
-## Relaciones
+### List (lista personalizada)
+| Atributo | Tipo | Notas |
+|---|---|---|
+| id | string (uuid) | PK |
+| userId | string | FK → User |
+| name | string | Nombre de la lista |
+| description | string | Nullable |
+| createdAt | Date | Creación |
 
-- **MediaItem** ↔ **Category**: N:1 (cada item pertenece a una categoría)
-- **MediaItem** ↔ **Tag**: N:N (cada item puede tener muchas etiquetas)
-- **MediaItem** ↔ **Collection**: N:N (cada item puede pertenecer a muchas colecciones)
-- **MediaItem** ↔ **Playlist**: N:N (cada item puede estar en muchas listas personalizadas)
-- **User** ↔ **MediaItem**: 1:N (un usuario crea muchos items)
-- **User** → **MediaItem** (favorites): N:N (subconjunto marcado como favorito — derivado del status, no relación separada)
+### ListItem (relación N:N con orden)
+| Atributo | Tipo | Notas |
+|---|---|---|
+| listId | string | FK → List |
+| mediaItemId | string | FK → MediaItem |
+| position | number | Orden dentro de la lista |
 
-## Reglas de negocio extraídas
+### BulkImport (carga masiva, rol admin)
+| Atributo | Tipo | Notas |
+|---|---|---|
+| id | string (uuid) | PK |
+| userId | string | FK → User (debe ser admin) |
+| filename | string | Nombre del archivo subido |
+| status | enum: `pending`, `processing`, `completed`, `failed` | Estado de la importación |
+| totalItems | number | Total de registros en el archivo |
+| importedItems | number | Registros exitosos |
+| failedItems | number | Registros con error |
+| createdAt | Date | Cuándo se inició |
 
-1. **Favoritos** se modela via `status = favorite`, no como relación aparte.
-2. **Duplicados**: un MediaItem se identifica por título + tipo + creador. El admin debe poder evitar registros duplicados al cargar.
-3. **Carga masiva**: el admin puede subir un archivo (planilla) con múltiples items; el sistema debe previsualizar y permitir revisión antes de confirmar la incorporación.
-4. **Rol admin**: puede crear, editar, eliminar items; carga masiva. El usuario normal solo consulta y gestiona su propia biblioteca (en MVP, un solo usuario sin auth multi-tenant).
-5. **Búsqueda**: soporte por título, tipo, creador, género, categoría, estado, etiquetas, plataforma.
-6. **Filtros combinables**: el usuario puede apilar múltiples filtros simultáneamente.
+## Relaciones clave
 
-## Ambigüedades resueltas por el orquestador
+- **User 1:N MediaItem** — cada contenido pertenece a un usuario.
+- **MediaItem N:1 Category** — un contenido puede tener una categoría (opcional).
+- **MediaItem N:N Tag** — un contenido puede tener múltiples etiquetas y viceversa.
+- **MediaItem N:N Collection** — un contenido puede estar en múltiples colecciones.
+- **MediaItem N:N List** — un contenido puede estar en múltiples listas, con posición ordenada.
+- **User 1:N BulkImport** — solo usuarios admin pueden crear importaciones masivas.
 
-- **Favoritos como status vs. relación aparte**: se modela como valor del enum `status` para simplificar; si en el futuro se requiere "marcar como favorito sin cambiar el estado de consumo", se puede agregar un booleano `isFavorite` independiente.
-- **Multi-usuario vs. single-user**: la descripción no menciona autenticación multi-tenant; por ahora se modela un único usuario por defecto. Si se necesita auth, se agregará en la fase de enganche con backend.
-- **Categorías predefinidas vs. libres**: se asume que las categorías las crea el usuario (o el admin); no hay un set fijo predeterminado.
+## Reglas de negocio
+
+1. **Un usuario solo ve su propia biblioteca** — no hay contenido compartido entre usuarios (versión actual).
+2. **El status `favorite` es acumulativo** — un item puede ser `completed` Y `isFavorite = true` simultáneamente.
+3. **La búsqueda** debe cubrir: título, creador, género, categoría, etiquetas, plataforma, tipo y estado.
+4. **BulkImport** requiere rol `admin`. El archivo debe ser validado antes de insertar — evitar duplicados por título + userId.
+5. **Las categorías, etiquetas, colecciones y listas son privadas** por usuario.
+6. **coverImage** es opcional — la UI debe manejar el caso sin portada gracefully.
+7. **sourceUrl** es opcional — algunos contenidos pueden no tener enlace externo.

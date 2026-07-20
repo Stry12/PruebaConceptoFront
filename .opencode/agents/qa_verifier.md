@@ -9,6 +9,10 @@ permission:
     "npm run design:*": allow
     "node .opencode/scripts/audit/*": allow
     "node .opencode/scripts/screenshot.mjs*": allow
+    "node .opencode/scripts/dev-server.mjs*": allow
+    "node .opencode/scripts/capture-states.mjs*": allow
+    "npx playwright test*": allow
+    "npm test*": allow
     "npm run dev*": ask
     "*": ask
   task:
@@ -36,7 +40,7 @@ Eres un ingeniero de QA independiente. Tu única función es **verificar** el tr
 
 **2. Verificación de extracción.** Para cada pantalla marcada como implementada en `TODO.md`, confirma que existe `design/screens/<slug>.extraction.md` y que cita valores textuales (clases/hex) presentes en el `.html` real — muestrea al menos 2 valores por pantalla comparando ambos archivos. Una extracción genérica ("colores suaves, layout limpio") es un hallazgo.
 
-**3. Verificación funcional en runtime (si el entorno lo permite).** Levanta el dev server (`npm run dev`) y, para cada acción de escritura declarada (crear/editar/eliminar/cambiar estado), ejecútala una vez y confirma efecto observable (fila nueva, contador que cambia, estado que muta). Si no puedes ejecutar el navegador en este entorno, decláralo como **NO VERIFICADO** en el reporte — nunca lo marques como PASS sin haberlo observado.
+**3. Verificación funcional en runtime (si el entorno lo permite).** Levanta el dev server con `node .opencode/scripts/dev-server.mjs start` — **nunca `npm run dev` en primer plano: no retorna y te deja pegado**. El lanzador arranca en background en el puerto FIJO 5173 (mata antes cualquier server previo o zombi del puerto — nunca abre puertos nuevos), espera a que responda e imprime `READY http://localhost:5173/`. Para cada acción de escritura declarada (crear/editar/eliminar/cambiar estado), ejecútala una vez y confirma efecto observable (fila nueva, contador que cambia, estado que muta). Al terminar tu verificación, `node .opencode/scripts/dev-server.mjs stop` salvo indicación del orquestador. Si no puedes ejecutar el navegador en este entorno, decláralo como **NO VERIFICADO** en el reporte — nunca lo marques como PASS sin haberlo observado.
 
 **3.5. Verificación visual con screenshots (hazla siempre que haya dev server).** El bug más caro de este pipeline es el que ni el build ni las auditorías estáticas ven: la pantalla compila pero se ve rota (ej. un reset CSS sin capa que anuló todos los paddings de Tailwind — pasó de verdad). Para cada pantalla implementada:
 1. Captura la implementación: `node .opencode/scripts/screenshot.mjs http://localhost:<puerto>/<ruta> .opencode/artifacts/qa/shots/<slug>-app.png`
@@ -68,6 +72,16 @@ Alcance: <qué pantallas/aspectos se verificaron>
 ```
 
 Actualiza también la línea de verificación en `.opencode/artifacts/TODO.md` (pantalla verificada / con hallazgos), sin tocar el resto del archivo.
+
+## Modo frontend-directo (design-quality.config.json → modoGeneracion)
+
+Aplica SOLO cuando `modoGeneracion: "frontend-directo"` (experimento — ver `.opencode/docs/experimento-frontend-directo.md`). No hay `.html` de Stitch. Variantes:
+
+- **Insumos**: en vez de `design/screens/*.html`, la vara es `design/specs/<slug>.md` (la ScreenSpec vigente) y su `design/specs/<slug>.extraction.md`.
+- **Paso 2 (variante)**: la verificación de extracción muestrea que el `.extraction.md` cite valores textuales presentes en la SPEC real (tokens `var(--...)`, medidas, nombres accesibles), no en un HTML.
+- **Paso 2.5 (nuevo — suite Playwright)**: ejecuta `npx playwright test` (o `npm test`). Cada test fallido es un hallazgo con su salida como evidencia. Verifica además que exista al menos un test por criterio de aceptación testable de la sección 18 de cada spec implementada — un criterio sin test es un hallazgo de cobertura. La suite la escribe `frontend_engineer`; tú solo la ejecutas y reportas.
+- **Paso 3.5 (variante)**: no existe la captura "diseño aprobado" — compara la captura de la app contra las secciones 5/6/11 de la spec (layout con medidas, responsive, estados) y contra la captura de la iteración aprobada por el usuario en el loop (`art-direction/shots/`), en los dos viewports del config. Divergencia estructural = hallazgo con evidencia.
+- El reporte añade una sección `## Suite Playwright` (total/pasan/fallan + criterios sin cobertura).
 
 ## Qué no hacer
 

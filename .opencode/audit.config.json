@@ -1,7 +1,7 @@
 {
-  "srcDir": "hospital-frontend/src",
-  "pagesDir": "hospital-frontend/src/pages",
-  "componentsDir": "hospital-frontend/src/shared/components",
-  "tokensFile": "hospital-frontend/src/styles/theme.css",
-  "publicRoutes": ["/login"]
+  "srcDir": "mediavault-frontend/src",
+  "pagesDir": "mediavault-frontend/src/pages",
+  "componentsDir": "mediavault-frontend/src/shared/components",
+  "tokensFile": "mediavault-frontend/src/styles/theme.css",
+  "publicRoutes": []
 }

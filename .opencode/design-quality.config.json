@@ -1,0 +1,20 @@
+{
+  "umbral": 90,
+  "maxIteraciones": 3,
+  "modelId": "GEMINI_3_FLASH",
+  "pantallaFirma": "auto",
+  "reglaSeleccionFirma": "Nodo raíz del objeto central del producto (el que el usuario mira el 80% del tiempo según ux-flow.md), registro 'producto', con la mayor densidad de componentes reutilizables. ui_designer la propone al cierre de la Fase 3 y el usuario la confirma en ese mismo gate. Si pantallaFirma tiene un slug explícito en vez de 'auto', ese slug manda.",
+  "viewports": ["1920x1080", "1280x800", "768x1024", "390x844"],
+  "dryRun": false,
+  "modoGeneracion": "frontend-directo",
+  "_modoGeneracionValores": "stitch | frontend-directo. En 'frontend-directo' (experimento, ver .opencode/docs/experimento-frontend-directo.md): Stitch está deshabilitado (opencode.json → mcp.stitch.enabled=false), ui_designer compone ScreenSpecs en artifacts/design/specs/ con la skill screen-spec-composer, frontend_engineer implementa desde la spec sin .html descargado, y la fuente de verdad de revisión son capturas de la app renderizada (screenshot.mjs). Rollback: restaurar opencode.json.bk y poner este valor en 'stitch'.",
+  "guardarArtefactosIteracion": true,
+  "_lectores": {
+    "orchestrator": "umbral, maxIteraciones, modoGeneracion — controla el loop de calidad (paso 3e de su flujo) y elige la variante del loop según el modo",
+    "art_director": "umbral, viewports, modoGeneracion — puntúa y emite veredicto APROBADA/ITERAR/TECHO; en frontend-directo puntúa capturas de la app renderizada contra la ScreenSpec",
+    "ui_designer": "modelId, dryRun, pantallaFirma, reglaSeleccionFirma, modoGeneracion — selección de pantalla firma (Fase 3); en modo stitch ejecuta/itera en Stitch (Fase 4), en frontend-directo compone ScreenSpecs (skill screen-spec-composer)",
+    "frontend_engineer": "modoGeneracion — en frontend-directo implementa desde la ScreenSpec (sin .html descargado) y monta la suite Playwright",
+    "qa_verifier": "modoGeneracion, viewports — en frontend-directo la verificación incluye la suite Playwright y capturas de la app",
+    "design_reviewer": "modoGeneracion, viewports — en frontend-directo revisa la app viva contra la ScreenSpec vigente"
+  }
+}
